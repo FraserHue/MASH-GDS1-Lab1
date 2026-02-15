@@ -5,6 +5,7 @@ public class HUD : MonoBehaviour
 {
     public TMP_Text rescuedText;
     public TMP_Text inHelicopterText;
+    public TMP_Text timerText;
 
     Pickup pickup;
     GameManager gameManager;
@@ -28,5 +29,11 @@ public class HUD : MonoBehaviour
 
         if (inHelicopterText != null)
             inHelicopterText.text = "Soldiers in Helicopter: " + inHeli;
+
+        if (timerText != null && gameManager != null)
+        {
+            int secondsLeft = Mathf.CeilToInt(gameManager.TimeRemaining);
+            timerText.text = "Time: " + secondsLeft;
+        }
     }
 }

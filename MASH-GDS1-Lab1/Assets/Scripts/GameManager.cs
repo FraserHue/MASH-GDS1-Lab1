@@ -8,13 +8,21 @@ public class GameManager : MonoBehaviour
 
     public Pickup pickup;
 
+    public float startTimeSeconds = 15f;
+
     bool gameEnded = false;
+
+    float timeRemaining;
 
     int soldiersRescued = 0;
     public int SoldiersRescued => soldiersRescued;
 
+    public float TimeRemaining => timeRemaining;
+
     void Start()
     {
+        timeRemaining = startTimeSeconds;
+
         if (gameOverText != null) gameOverText.SetActive(false);
         if (winText != null) winText.SetActive(false);
     }
@@ -24,6 +32,17 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            return;
+        }
+
+        if (gameEnded) return;
+
+        timeRemaining -= Time.deltaTime;
+
+        if (timeRemaining <= 0f)
+        {
+            timeRemaining = 0f;
+            GameOver();
         }
     }
 
