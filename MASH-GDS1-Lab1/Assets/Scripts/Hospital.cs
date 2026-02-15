@@ -21,5 +21,9 @@ public class Hospital : MonoBehaviour
         int dropped = pickup.DropOffAll();
         if (dropped > 0)
             soldiersRescued += dropped;
+
+        GameManager gm = FindFirstObjectByType<GameManager>();
+        if (gm != null)
+            gm.CheckWinCondition();
     }
 }

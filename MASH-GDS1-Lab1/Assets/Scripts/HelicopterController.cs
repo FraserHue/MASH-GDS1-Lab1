@@ -16,14 +16,6 @@ public class HelicopterController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
     void FixedUpdate()
     {
         float moveX = Input.GetAxis("Horizontal");
@@ -57,5 +49,16 @@ public class HelicopterController : MonoBehaviour
         float y = Mathf.Clamp(target.y, min.y + halfH, max.y - halfH);
 
         return new Vector2(x, y);
+    }
+
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Tree"))
+        {
+            GameManager gm = FindFirstObjectByType<GameManager>();
+            if (gm != null)
+                gm.GameOver();
+        }
     }
 }
