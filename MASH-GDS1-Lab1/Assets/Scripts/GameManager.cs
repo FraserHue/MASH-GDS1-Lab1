@@ -10,10 +10,13 @@ public class GameManager : MonoBehaviour
 
     bool gameEnded = false;
 
+    int soldiersRescued = 0;
+    public int SoldiersRescued => soldiersRescued;
+
     void Start()
     {
-        gameOverText.SetActive(false);
-        winText.SetActive(false);
+        if (gameOverText != null) gameOverText.SetActive(false);
+        if (winText != null) winText.SetActive(false);
     }
 
     void Update()
@@ -24,12 +27,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddRescued(int amount)
+    {
+        if (amount <= 0) return;
+        soldiersRescued += amount;
+    }
+
     public void GameOver()
     {
         if (gameEnded) return;
 
         gameEnded = true;
-        gameOverText.SetActive(true);
+        if (gameOverText != null) gameOverText.SetActive(true);
         DisableHelicopter();
     }
 
@@ -37,10 +46,13 @@ public class GameManager : MonoBehaviour
     {
         if (gameEnded) return;
 
+        if (pickup == null)
+            pickup = FindFirstObjectByType<Pickup>();
+
         if (AllSoldiersCollected())
         {
             gameEnded = true;
-            winText.SetActive(true);
+            if (winText != null) winText.SetActive(true);
             DisableHelicopter();
         }
     }
@@ -48,7 +60,8 @@ public class GameManager : MonoBehaviour
     bool AllSoldiersCollected()
     {
         GameObject[] soldiers = GameObject.FindGameObjectsWithTag("Soldier");
-        return soldiers.Length == 0 && pickup.SoldiersInHelicopter == 0;
+        int inHeli = pickup != null ? pickup.SoldiersInHelicopter : 0;
+        return soldiers.Length == 0 && inHeli == 0;
     }
 
     void DisableHelicopter()

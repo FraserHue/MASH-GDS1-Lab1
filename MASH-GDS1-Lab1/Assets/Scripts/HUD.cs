@@ -7,21 +7,21 @@ public class HUD : MonoBehaviour
     public TMP_Text inHelicopterText;
 
     Pickup pickup;
-    Hospital hospital;
+    GameManager gameManager;
 
     void Awake()
     {
         pickup = FindFirstObjectByType<Pickup>();
-        hospital = FindFirstObjectByType<Hospital>();
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     void Update()
     {
         if (pickup == null) pickup = FindFirstObjectByType<Pickup>();
-        if (hospital == null) hospital = FindFirstObjectByType<Hospital>();
+        if (gameManager == null) gameManager = FindFirstObjectByType<GameManager>();
 
         int inHeli = pickup != null ? pickup.SoldiersInHelicopter : 0;
-        int rescued = hospital != null ? hospital.SoldiersRescued : 0;
+        int rescued = gameManager != null ? gameManager.SoldiersRescued : 0;
 
         if (rescuedText != null)
             rescuedText.text = "Soldiers Rescued: " + rescued;

@@ -2,28 +2,19 @@ using UnityEngine;
 
 public class Hospital : MonoBehaviour
 {
-    public Pickup pickup;
-
-    int soldiersRescued = 0;
-    public int SoldiersRescued => soldiersRescued;
-
-    void Awake()
-    {
-        if (pickup == null)
-            pickup = FindFirstObjectByType<Pickup>();
-    }
-
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (pickup == null) return;
-        if (!other.CompareTag("Player")) return;
+        Pickup heliPickup = other.GetComponentInParent<Pickup>();
+        if (heliPickup == null) return;
 
-        int dropped = pickup.DropOffAll();
-        if (dropped > 0)
-            soldiersRescued += dropped;
+        int dropped = heliPickup.DropOffAll();
+        if (dropped <= 0) return;
 
         GameManager gm = FindFirstObjectByType<GameManager>();
         if (gm != null)
+        {
+            gm.AddRescued(dropped);
             gm.CheckWinCondition();
+        }
     }
 }
