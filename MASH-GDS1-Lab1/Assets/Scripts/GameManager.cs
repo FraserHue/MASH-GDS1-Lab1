@@ -3,28 +3,46 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
     public GameObject gameOverText;
     public GameObject winText;
 
     public Pickup pickup;
 
-    public float startTimeSeconds = 15f;
+    public float baseTimeSeconds = 6f;
+    public float secondsPerSoldier = 2f;
+    public float secondsPerTree = 1f;
+    public float minTimeSeconds = 18f;
+    public float maxTimeSeconds = 40f;
 
     bool gameEnded = false;
 
-    float timeRemaining;
+    float timeRemaining = 0f;
+    bool timeConfigured = false;
 
     int soldiersRescued = 0;
     public int SoldiersRescued => soldiersRescued;
-
     public float TimeRemaining => timeRemaining;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     void Start()
     {
-        timeRemaining = startTimeSeconds;
-
         if (gameOverText != null) gameOverText.SetActive(false);
         if (winText != null) winText.SetActive(false);
+
+        if (!timeConfigured)
+            timeRemaining = Mathf.Clamp(baseTimeSeconds, minTimeSeconds, maxTimeSeconds);
     }
 
     void Update()
@@ -44,6 +62,13 @@ public class GameManager : MonoBehaviour
             timeRemaining = 0f;
             GameOver();
         }
+    }
+
+    public void ConfigureTimerFromCounts(int soldierCount, int treeCount)
+    {
+        float t = baseTimeSeconds + (soldierCount * secondsPerSoldier) + (treeCount * secondsPerTree);
+        timeRemaining = Mathf.Clamp(t, minTimeSeconds, maxTimeSeconds);
+        timeConfigured = true;
     }
 
     public void AddRescued(int amount)

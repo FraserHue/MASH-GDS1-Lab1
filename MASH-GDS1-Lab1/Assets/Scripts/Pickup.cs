@@ -7,7 +7,6 @@ public class Pickup : MonoBehaviour
     public AudioClip pickupClip;
 
     int soldiersInHelicopter = 0;
-
     public int SoldiersInHelicopter => soldiersInHelicopter;
 
     void Awake()
@@ -26,7 +25,7 @@ public class Pickup : MonoBehaviour
         if (audioSource != null && pickupClip != null)
             audioSource.PlayOneShot(pickupClip);
 
-        other.gameObject.SetActive(false);
+        Destroy(other.gameObject);
     }
 
     public int DropOffAll()
